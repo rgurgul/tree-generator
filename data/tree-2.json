@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "code": "aaa",
+    "level": 1,
+    "subCategories": [
+      {
+        "id": 4,
+        "code": "ddd",
+        "level": 2,
+        "subCategories": [
+          {
+            "id": 7,
+            "code": "ggg",
+            "level": 3,
+            "subCategories": [
+              {
+                "id": 8,
+                "code": "hhh",
+                "level": 4,
+                "subCategories": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "code": "bbb",
+    "level": 1,
+    "subCategories": [
+      {
+        "id": 5,
+        "code": "eee",
+        "level": 2,
+        "subCategories": [
+          {
+            "id": 9,
+            "code": "iii",
+            "level": 3,
+            "subCategories": [
+              {
+                "id": 10,
+                "code": "jjj",
+                "level": 4,
+                "subCategories": []
+              },
+              {
+                "id": 11,
+                "code": "hhh2",
+                "level": 4,
+                "subCategories": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "code": "ccc",
+    "level": 1,
+    "subCategories": [
+      {
+        "id": 6,
+        "code": "fff",
+        "level": 2,
+        "subCategories": [
+          {
+            "id": 11,
+            "code": "jjj222",
+            "level": 3,
+            "subCategories": []
+          }
+        ]
+      }
+    ]
+  }
+]
