@@ -1,0 +1,15 @@
+<div class="label label-default"
+     ng-class="{'label-success':setActive()}">
+    {{item.code}}
+</div>
+
+<button ng-if="item.subCategories.length"
+        ng-click="item.open = !item.open">
+    switch
+</button>
+
+<ul ng-if="item.open">
+    <li ng-repeat="child in item.subCategories">
+        <tree-dctv item="child" config="config"></tree-dctv>
+    </li>
+</ul>

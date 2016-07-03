@@ -3,12 +3,12 @@ angular
     .service('dataProvider', function ($timeout, $http) {
         this.items = [];
         var timeoutId = null,
-            limit = 10,
+            limit = 1000,
             searchForKey = "code",
             delayTime = 1000,
-            config = {};
+            config;
 
-        this.init = function (callback) {
+        this.getItems = function (callback) {
             return $http
                 .get('data/tree-2.json')
                 .success(function (response) {
@@ -34,30 +34,30 @@ angular
         this.search = function (search) {
             config = this.setDefault();
             this.searchTxt = search;
-            return this.findEl(this.items);
+            return this.findPaths(this.items);
         };
 
-        this.findEl = function (items, parent) {
+        this.findPaths = function (items, parent) {
             items.forEach(function (item) {
-                item.ids = [item.id];
-                if (parent) item.ids = item.ids.concat(parent.ids);
-                var found = item[searchForKey].indexOf(this.searchTxt);
-                if (found > -1) {
-                    item.ids.reverse();
+                item.path = [item.id];
+                parent && (item.path = item.path.concat(parent.path));
+                var found = item[searchForKey].startsWith(this.searchTxt);
+                if (found) {
+                    item.path.reverse();
                     config.count++;
                     if (limit && config.paths.length < limit) {
-                        config.paths.push(item.ids);
+                        config.paths.push(item.path);
                     }
                 }
                 if (item.subCategories.length) {
-                    this.findEl(item.subCategories, item);
+                    this.findPaths(item.subCategories, item);
                 }
             }, this);
             return config;
         };
     })
     .filter('opener', function () {
-        var result;
+        var itemsCopy;
         var oldConfig;
         return function (items, config) {
             if (
@@ -67,21 +67,20 @@ angular
                 && !angular.equals(config, oldConfig)
             ) {
                 oldConfig = angular.copy(config);
-                result = angular.copy(items);
-                config.forEach(function (ids) {
-                    var currentNode = result;
-                    ids.forEach(function (id) {
+                itemsCopy = angular.copy(items);
+                config.forEach(function (path) {
+                    var currentNodes = itemsCopy;
+                    path.forEach(function (id) {
                         if (id) {
-                            var elFound = _.findWhere(currentNode, {id: id});
-                            if (elFound) {
-                                currentNode = elFound.subCategories;
-                                elFound.open = true;
+                            var foundNode = _.findWhere(currentNodes, {id: id});
+                            if (foundNode) {
+                                currentNodes = foundNode.subCategories;
+                                foundNode.open = true;
                             }
                         }
                     });
                 });
-                console.log(config);
             }
-            return result;
+            return itemsCopy;
         }
     });
