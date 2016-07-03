@@ -1,59 +1,29 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css">
     <script src="libs/underscore/underscore-min.js"></script>
     <script src="libs/angular/angular.js"></script>
     <script src="js/data-provider.js"></script>
+    <script src="js/tree-dctv.js"></script>
 </head>
 <body ng-app="app">
 <div ng-controller="Ctrl" class="container">
 
-
     <div class="panel panel-primary">
-        count: {{config.count}}
+
         <div class="panel-body">
-            <input type="text" autofocus ng-model="search">{{search}}
-            <hr>
-            <ul class="col-sm-6">
+            <ul class="col-xs-6">
                 <li ng-repeat="item in items | opener:config.paths">
-                    {{item.id}}
-                    <button ng-if="item.subCategories.length"
-                            ng-click="item.open = !item.open">
-                        switch
-                    </button>
-                    <ul ng-if="item.open">
-                        <li ng-repeat="child1 in item.subCategories">
-                            {{child1.id}}
-                            <button ng-if="child1.subCategories.length"
-                                    ng-click="child1.open = !child1.open">
-                                switch
-                            </button>
-                            <ul ng-if="child1.open">
-                                <li ng-repeat="child2 in child1.subCategories">
-                                    {{child2.id}}
-                                    <button ng-if="child2.subCategories.length"
-                                            ng-click="child2.open = !child2.open">
-                                        switch
-                                    </button>
-                                    <ul ng-if="child2.open">
-                                        <li ng-repeat="child3 in child2.subCategories">
-                                            {{child3.id}}
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <tree-dctv item="item" config="config"></tree-dctv>
                 </li>
             </ul>
-            <div class="col-sm-6">
-                <!--{{filter}}-->
+            <div class="col-xs-6">
+                <input type="text" autofocus ng-model="search">
+                <span class="label label-danger">count: {{config.count}}</span>
             </div>
-
         </div>
     </div>
 
@@ -61,10 +31,10 @@
 
 <script>
     angular
-            .module('app', ['app.dataProvider'])
+            .module('app', ['app.dataProvider', 'app.treeDctv'])
             .controller('Ctrl', function ($scope, dataProvider) {
 
-                dataProvider.init(function (items) {
+                dataProvider.getItems(function (items) {
                     $scope.items = items;
                 });
 
