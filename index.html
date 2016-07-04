@@ -13,16 +13,14 @@
 <div ng-controller="Ctrl" class="container">
 
     <div class="panel panel-primary">
-
         <div class="panel-body">
             <ul class="col-xs-6">
-                <li ng-repeat="item in items | opener:config.paths">
-                    <tree-dctv item="item" config="config"></tree-dctv>
-                </li>
+                <tree-dctv items="items" config="config"></tree-dctv>
             </ul>
             <div class="col-xs-6">
                 <input type="text" autofocus ng-model="search">
                 <span class="label label-danger">count: {{config.count}}</span>
+                <div ng-if="loading">loading...</div>
             </div>
         </div>
     </div>
@@ -39,12 +37,14 @@
                 });
 
                 $scope.$watch('search', function (newVal) {
+                    $scope.loading = true;
                     dataProvider.delay(function () {
                         if (newVal) {
                             $scope.config = dataProvider.search(newVal);
                         } else {
                             $scope.config = dataProvider.setDefault();
                         }
+                        $scope.loading = false;
                     });
                 });
             });
