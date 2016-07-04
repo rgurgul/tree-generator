@@ -3,10 +3,19 @@ angular
     .directive('treeDctv', function () {
         return {
             scope: {
+                items: "=",
+                config: "="
+            },
+            templateUrl: "tpls/tree-dctv.html"
+        }
+    })
+    .directive('branchDctv', function () {
+        return {
+            scope: {
                 item: "=",
                 config: "="
             },
-            templateUrl: "js/tree-dctv.html",
+            templateUrl: "tpls/branch-dctv.html",
             controller: function ($scope) {
                 $scope.setActive = function () {
                     var paths = $scope.config.paths;
