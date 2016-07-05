@@ -6,8 +6,7 @@
     <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css">
     <script src="libs/underscore/underscore-min.js"></script>
     <script src="libs/angular/angular.js"></script>
-    <script src="js/data-provider.js"></script>
-    <script src="js/tree-dctv.js"></script>
+    <script src="js/tree-generator.js"></script>
 </head>
 <body ng-app="app">
 <div ng-controller="Ctrl" class="container">
@@ -15,12 +14,12 @@
     <div class="panel panel-primary">
         <div class="panel-body">
             <ul class="col-xs-6">
-                <tree-dctv items="items" config="config"></tree-dctv>
+                <tree-dctv></tree-dctv>
             </ul>
             <div class="col-xs-6">
                 <input type="text" autofocus ng-model="search">
-                <span class="label label-danger">count: {{config.count}}</span>
-                <div ng-if="loading">loading...</div>
+                <span class="label label-danger">count: {{treeData.config.count}}</span>
+                <div ng-if="treeData.loading">loading...</div>
             </div>
         </div>
     </div>
@@ -29,23 +28,13 @@
 
 <script>
     angular
-            .module('app', ['app.dataProvider', 'app.treeDctv'])
-            .controller('Ctrl', function ($scope, dataProvider) {
-
-                dataProvider.getItems(function (items) {
-                    $scope.items = items;
-                });
-
+            .module('app', ['app.treeGenerator'])
+            .config(function (treeDataProvider) {
+                treeDataProvider.itemsUrl = 'data/tree-2.json';
+            })
+            .controller('Ctrl', function ($scope, treeData) {
                 $scope.$watch('search', function (newVal) {
-                    $scope.loading = true;
-                    dataProvider.delay(function () {
-                        if (newVal) {
-                            $scope.config = dataProvider.search(newVal);
-                        } else {
-                            $scope.config = dataProvider.setDefault();
-                        }
-                        $scope.loading = false;
-                    });
+                    treeData.search(newVal);
                 });
             });
 
