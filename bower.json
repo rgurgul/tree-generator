@@ -3,7 +3,7 @@
   "homepage": "https://github.com/rgurgul/tree-generator",
   "version": "0.0.1",
   "authors": [
-    "Robert Gurgul"
+    "Robert Gurgul, Michał Lisowski"
   ],
   "description": "angular json tree generator and searcher",
   "main": "tree-generator.js",
