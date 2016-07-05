@@ -61,7 +61,7 @@ angular
                         .get(options.itemsUrl)
                         .success(function (response) {
                             this.setDefault();
-                            this.items = this.items.concat(response);
+                            this.items = response;
                         }.bind(this));
                 }
                 ,
