@@ -18,7 +18,7 @@ angular
             templateUrl: treeData.branchTpl,
             controller: function ($scope) {
                 $scope.setActive = function () {
-                    var paths = $scope.config.paths;
+                    var paths = $scope.config;
                     if (paths && paths.length) {
                         return paths.some(function (path) {
                             if (path) {
@@ -57,6 +57,7 @@ angular
                 loading: false,
                 treeTpl: treeTpl,
                 branchTpl: branchTpl,
+                count: 0,
 
                 getItems: function () {
                     return $http
@@ -68,20 +69,18 @@ angular
                 }
                 ,
                 setDefault: function () {
-                    this.config = {
-                        paths: [],
-                        count: 0
-                    };
+                    this.config = [];
+                    this.count = 0;
                 }
                 ,
                 search: function (search) {
+                    this.setDefault();
                     if (!search) {
                         return;
                     }
                     this.loading = true;
                     timeoutId && $timeout.cancel(timeoutId);
                     timeoutId = $timeout(function () {
-                        this.setDefault();
                         this.searchTxt = search;
                         this.findPaths(this.items);
                     }.bind(this), delay);
@@ -94,9 +93,9 @@ angular
                         var found = item[searchForKey].startsWith(this.searchTxt);
                         if (found) {
                             item.path.reverse();
-                            this.config.count++;
-                            if (limit && this.config.paths.length < limit) {
-                                this.config.paths.push(item.path);
+                            this.count++;
+                            if (limit && this.config.length < limit) {
+                                this.config.push(item.path);
                             }
                         }
                         if (item.subCategories.length) {
@@ -104,7 +103,6 @@ angular
                         }
                     }, this);
                     this.loading = false;
-                    return this.config;
                 }
             };
         };
@@ -138,10 +136,12 @@ angular
         }
     })
     .run(function ($templateCache) {
+
         $templateCache.put('tree.html', '\
-            <li ng-repeat="item in treeData.items | opener:treeData.config.paths"> \
+            <li ng-repeat="item in treeData.items | opener:treeData.config"> \
                 <branch-dctv item="item" config="treeData.config"></branch-dctv> \
             </li>');
+
         $templateCache.put('branch.html', '\
             <div class="label label-default" ng-class="{\'label-success\':setActive()}"> \
                 {{item.code}} \
@@ -153,4 +153,5 @@ angular
                 </li> \
             </ul>\
        ');
+
     });
