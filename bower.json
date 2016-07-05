@@ -1,6 +1,7 @@
 {
   "name": "tree-generator",
   "homepage": "https://github.com/rgurgul/tree-generator",
+  "version": "0.0.1",
   "authors": [
     "Robert Gurgul"
   ],
