@@ -1,3 +1,3 @@
-<li ng-repeat="item in items | opener:config.paths">
-    <branch-dctv item="item" config="config"></branch-dctv>
+<li ng-repeat="item in treeData.items | opener:treeData.config.paths">
+    <branch-dctv item="item" config="treeData.config"></branch-dctv>
 </li>
