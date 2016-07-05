@@ -34,34 +34,31 @@ angular
     .provider('treeData', function () {
 
         // defaults. You can override it in config function
-        this.itemsUrl = '';
-        this.limit = 1000;
-        this.searchForKey = "code";
-        this.delay = 1000;
-        this.treeTpl = 'tree.html';
-        this.branchTpl = 'branch.html';
+        this.options = {
+            itemsUrl: 'data/tree-2.json',
+            limit: 1000,
+            searchForKey: "code",
+            delay: 1000,
+            treeTpl: 'tree.html',
+            branchTpl: 'branch.html'
+        };
 
         this.$get = function ($timeout, $http) {
 
             var timeoutId = null;
-            var itemsUrl = this.itemsUrl;
-            var limit = this.limit;
-            var searchForKey = this.searchForKey;
-            var delay = this.delay;
-            var treeTpl = this.treeTpl;
-            var branchTpl = this.branchTpl;
+            var options = this.options;
 
             return {
                 items: [],
                 config: [],
                 loading: false,
-                treeTpl: treeTpl,
-                branchTpl: branchTpl,
                 count: 0,
+                treeTpl: options.treeTpl,
+                branchTpl: options.branchTpl,
 
                 getItems: function () {
                     return $http
-                        .get(itemsUrl)
+                        .get(options.itemsUrl)
                         .success(function (response) {
                             this.setDefault();
                             this.items = this.items.concat(response);
@@ -83,18 +80,18 @@ angular
                     timeoutId = $timeout(function () {
                         this.searchTxt = search;
                         this.findPaths(this.items);
-                    }.bind(this), delay);
+                    }.bind(this), options.delay);
                 }
                 ,
                 findPaths: function (items, parent) {
                     items.forEach(function (item) {
                         item.path = [item.id];
                         parent && (item.path = item.path.concat(parent.path));
-                        var found = item[searchForKey].startsWith(this.searchTxt);
+                        var found = item[options.searchForKey].startsWith(this.searchTxt);
                         if (found) {
                             item.path.reverse();
                             this.count++;
-                            if (limit && this.config.length < limit) {
+                            if (options.limit && this.config.length < options.limit) {
                                 this.config.push(item.path);
                             }
                         }

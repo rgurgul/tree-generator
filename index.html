@@ -33,7 +33,7 @@
     angular
             .module('app', ['app.treeGenerator'])
             .config(function (treeDataProvider) {
-                treeDataProvider.itemsUrl = 'data/tree-2.json';
+                treeDataProvider.options.itemsUrl = 'data/tree-2.json';
             })
             .controller('Ctrl', function () {
 
