@@ -1,21 +1,21 @@
 angular
     .module('app.treeGenerator', [])
-    .directive('treeDctv', function () {
+    .directive('treeDctv', function (treeData) {
         return {
-            templateUrl: "tpls/tree-dctv.html",
+            templateUrl: treeData.treeTpl,
             controller: function ($scope, treeData) {
                 $scope.treeData = treeData;
                 treeData.getItems();
             }
         }
     })
-    .directive('branchDctv', function () {
+    .directive('branchDctv', function (treeData) {
         return {
             scope: {
                 item: "=",
                 config: "="
             },
-            templateUrl: "tpls/branch-dctv.html",
+            templateUrl: treeData.branchTpl,
             controller: function ($scope) {
                 $scope.setActive = function () {
                     var paths = $scope.config.paths;
@@ -38,6 +38,8 @@ angular
         this.limit = 1000;
         this.searchForKey = "code";
         this.delay = 1000;
+        this.treeTpl = 'tree.html';
+        this.branchTpl = 'branch.html';
 
         this.$get = function ($timeout, $http) {
 
@@ -46,11 +48,15 @@ angular
             var limit = this.limit;
             var searchForKey = this.searchForKey;
             var delay = this.delay;
+            var treeTpl = this.treeTpl;
+            var branchTpl = this.branchTpl;
 
             return {
                 items: [],
                 config: [],
                 loading: false,
+                treeTpl: treeTpl,
+                branchTpl: branchTpl,
 
                 getItems: function () {
                     return $http
@@ -59,13 +65,15 @@ angular
                             this.setDefault();
                             this.items = this.items.concat(response);
                         }.bind(this));
-                },
+                }
+                ,
                 setDefault: function () {
                     this.config = {
                         paths: [],
                         count: 0
                     };
-                },
+                }
+                ,
                 search: function (search) {
                     if (!search) {
                         return;
@@ -77,7 +85,8 @@ angular
                         this.searchTxt = search;
                         this.findPaths(this.items);
                     }.bind(this), delay);
-                },
+                }
+                ,
                 findPaths: function (items, parent) {
                     items.forEach(function (item) {
                         item.path = [item.id];
@@ -97,7 +106,7 @@ angular
                     this.loading = false;
                     return this.config;
                 }
-            }
+            };
         };
     })
     .filter('opener', function () {
@@ -127,4 +136,21 @@ angular
             }
             return itemsCopy;
         }
+    })
+    .run(function ($templateCache) {
+        $templateCache.put('tree.html', '\
+            <li ng-repeat="item in treeData.items | opener:treeData.config.paths"> \
+                <branch-dctv item="item" config="treeData.config"></branch-dctv> \
+            </li>');
+        $templateCache.put('branch.html', '\
+            <div class="label label-default" ng-class="{\'label-success\':setActive()}"> \
+                {{item.code}} \
+            </div> \
+            <button ng-if="item.subCategories.length" ng-click="item.open = !item.open">switch </button>\
+            <ul ng-if="item.open"> \
+                <li ng-repeat="child in item.subCategories"> \
+                    <branch-dctv item="child" config="config"></branch-dctv> \
+                </li> \
+            </ul>\
+       ');
     });
