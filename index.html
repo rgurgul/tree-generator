@@ -35,8 +35,8 @@
             .config(function (treeDataProvider) {
                 treeDataProvider.options.itemsUrl = 'data/tree-2.json';
             })
-            .controller('Ctrl', function () {
-
+            .controller('Ctrl', function ($scope, treeData) {
+                $scope.treeData = treeData;
             });
 
 </script>

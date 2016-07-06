@@ -3,6 +3,7 @@ angular
     .directive('treeDctv', function (treeData) {
         return {
             templateUrl: treeData.treeTpl,
+            scope: true,
             controller: function ($scope, treeData) {
                 $scope.treeData = treeData;
                 treeData.getItems();
@@ -55,7 +56,6 @@ angular
                 count: 0,
                 treeTpl: options.treeTpl,
                 branchTpl: options.branchTpl,
-
                 getItems: function () {
                     return $http
                         .get(options.itemsUrl)
@@ -63,13 +63,11 @@ angular
                             this.setDefault();
                             this.items = response;
                         }.bind(this));
-                }
-                ,
+                },
                 setDefault: function () {
                     this.config = [];
                     this.count = 0;
-                }
-                ,
+                },
                 search: function (search) {
                     this.setDefault();
                     if (!search) {
@@ -80,9 +78,9 @@ angular
                     timeoutId = $timeout(function () {
                         this.searchTxt = search;
                         this.findPaths(this.items);
+                        this.loading = false;
                     }.bind(this), options.delay);
-                }
-                ,
+                },
                 findPaths: function (items, parent) {
                     items.forEach(function (item) {
                         item.path = [item.id];
@@ -99,7 +97,6 @@ angular
                             this.findPaths(item.subCategories, item);
                         }
                     }, this);
-                    this.loading = false;
                 }
             };
         };
