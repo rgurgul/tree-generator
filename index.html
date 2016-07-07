@@ -22,7 +22,8 @@
                        ng-model="search"
                        ng-change="treeData.search(search)">
                 <span class="label label-danger">count: {{treeData.count}}</span>
-                <div ng-if="treeData.loading">loading...</div>
+                <span ng-if="treeData.loading">loading...</span>
+                <div>{{treeData.items}}</div>
             </div>
         </div>
     </div>
