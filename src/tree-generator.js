@@ -2,7 +2,7 @@ angular
     .module('app.treeGenerator', [])
     .directive('treeDctv', function (treeData) {
         return {
-            templateUrl: treeData.treeTpl,
+            templateUrl: treeData.treeTplUrl,
             scope: true,
             controller: function ($scope, treeData) {
                 $scope.treeData = treeData;
@@ -16,7 +16,7 @@ angular
                 item: "=",
                 config: "="
             },
-            templateUrl: treeData.branchTpl,
+            templateUrl: treeData.branchTplUrl,
             controller: function ($scope) {
                 $scope.setActive = function () {
                     var paths = $scope.config;
@@ -36,12 +36,12 @@ angular
 
         // defaults. You can override it in config function
         this.options = {
-            itemsUrl: 'data/tree-2.json',
+            itemsJsonUrl: 'data/tree-2.json',
             limit: 1000,
             searchForKey: "code",
             delay: 1000,
-            treeTpl: 'tree.html',
-            branchTpl: 'branch.html'
+            treeTplUrl: 'tree.html',
+            branchTplUrl: 'branch.html'
         };
 
         this.$get = function ($timeout, $http) {
@@ -54,11 +54,11 @@ angular
                 config: [],
                 loading: false,
                 count: 0,
-                treeTpl: options.treeTpl,
-                branchTpl: options.branchTpl,
+                treeTplUrl: options.treeTplUrl,
+                branchTplUrl: options.branchTplUrl,
                 getItems: function () {
                     return $http
-                        .get(options.itemsUrl)
+                        .get(options.itemsJsonUrl)
                         .success(function (response) {
                             this.setDefault();
                             this.items = response;
@@ -96,6 +96,7 @@ angular
                         if (item.subCategories.length) {
                             this.findPaths(item.subCategories, item);
                         }
+                        delete item.path;
                     }, this);
                 }
             };
